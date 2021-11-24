@@ -1,5 +1,5 @@
 # FTX DegenTrader
-I stole Mitchel's [ftx-telegram-trader](https://github.com/pawiromitchel/ftx-telegram-trader) and modified it to my own needs. Thanks sir [@pawiromitchel](https://github.com/pawiromitchel) :)
+I stole Mitchel's [ftx-telegram-trader](https://github.com/pawiromitchel/ftx-telegram-trader) and modified it to my own needs for scalping BTC. Thanks sir [@pawiromitchel](https://github.com/pawiromitchel) :)
 
 ## Bot Commands
 - /info - Info about the bot
