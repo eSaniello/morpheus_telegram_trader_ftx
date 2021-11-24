@@ -1,0 +1,26 @@
+{
+  "name": "morpheus_telegram_trader_ftx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pawiromitchel/telegram-bot-ftx.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pawiromitchel/telegram-bot-ftx/issues"
+  },
+  "homepage": "https://github.com/pawiromitchel/telegram-bot-ftx#readme",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "ftx-api-rest": "^0.0.7",
+    "node-telegram-bot-api": "^0.53.0"
+  }
+}
