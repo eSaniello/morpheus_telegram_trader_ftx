@@ -88,7 +88,7 @@ What can I 😎 do for you?
                             type: 'stop',
                             size: pos_size,
                             triggerPrice: sl,
-                            orderPrice: sl,
+                            // orderPrice: sl,
                             retryUntilFilled: true
                         }
                     }).then(async () => {
