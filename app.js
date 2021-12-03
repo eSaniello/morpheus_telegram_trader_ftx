@@ -228,8 +228,8 @@ ${order.type} signal for ${order.ticker} on ${order.exchange}\nRisk %: ${order.r
 
                 if (pos_size != 0) {
                     // test msg
-                    bot.sendMessage(chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${sl} and TP @ $${tp}`);
-                    bot.sendAnimation(chatId, './assets/goat.mp4');
+                    bot.sendMessage(order.chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${sl} and TP @ $${tp}`);
+                    bot.sendAnimation(order.chatId, './assets/goat.mp4');
 
                     // // entry
                     // API_CONNECTION.request({
@@ -269,8 +269,8 @@ ${order.type} signal for ${order.ticker} on ${order.exchange}\nRisk %: ${order.r
                     //                 retryUntilFilled: true
                     //             }
                     //         }).then(async () => {
-                    //             bot.sendMessage(chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${sl} and TP @ $${tp}`);
-                    //             bot.sendAnimation(chatId, './assets/goat.mp4');
+                    // bot.sendMessage(order.chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${sl} and TP @ $${tp}`);
+                    // bot.sendAnimation(order.chatId, './assets/goat.mp4');
                     //         }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
                     //     }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
                     // }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
