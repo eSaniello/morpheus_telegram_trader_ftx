@@ -196,8 +196,6 @@ app.post("/hook", async (req, res) => {
     console.log('Webhook received', req.body);
     if (req.body.chatId) {
         const order = req.body;
-        bot.sendMessage(order.chatId, `✅ Webhook received:
-${order.type} signal for ${order.ticker} on ${order.exchange}\nRisk %: ${order.risk || "Not specified"}\nTP: ${order.tp || "Not specified"}\nSL: ${order.sl || "Not specified"}\nReason: ${order.reason || "Not specified"}`);
 
         // secret code in the alert to automatically take the trades
         if (order.secret === 'meow') {
@@ -228,7 +226,7 @@ ${order.type} signal for ${order.ticker} on ${order.exchange}\nRisk %: ${order.r
 
                 if (pos_size != 0) {
                     // test msg
-                    bot.sendMessage(order.chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${sl} and TP @ $${tp}`);
+                    bot.sendMessage(order.chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${sl.toFixed(2)} and TP @ $${tp.toFixed(2)}`);
                     bot.sendAnimation(order.chatId, './assets/goat.mp4');
 
                     // // entry
@@ -278,6 +276,9 @@ ${order.type} signal for ${order.ticker} on ${order.exchange}\nRisk %: ${order.r
                     bot.sendMessage(chatId, `❌ Error calculating position size ser`);
                 }
             }
+        } else {
+            bot.sendMessage(order.chatId, `✅ Webhook received:
+    ${order.type} signal for ${order.ticker} on ${order.exchange}\nRisk %: ${order.risk || "Not specified"}\nTP: ${order.tp || "Not specified"}\nSL: ${order.sl || "Not specified"}\nReason: ${order.reason || "Not specified"}`);
         }
     }
     res.status(200).end()
