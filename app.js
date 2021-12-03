@@ -183,7 +183,7 @@ Profit: ${HELPER.calculateProfit(order.recentAverageOpenPrice, price, order.side
 - Options = Once per bar close
 - Webhook URL = http://server_url/hook
 - Give it any alert name
-- Message should be = {"chatId":${chatId},"type":"BUY or SELL or CLOSE","exchange":"{{exchange}}","ticker":"{{ticker}}","risk":"1","tp":"{{plot("TP")}}","sl":"{{plot("SL)}}","reason":"Catch the knife!"}`)
+- Message should be = {"chatId":${chatId},"type":"BUY or SELL or CLOSE","exchange":"{{exchange}}","ticker":"{{ticker}}","risk":"1","tp":"{{plot("TP")}}","sl":"{{plot("SL")}}","reason":"Catch the knife!"}`)
     }
 });
 
