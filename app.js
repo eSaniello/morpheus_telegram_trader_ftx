@@ -214,9 +214,9 @@ app.post("/hook", async (req, res) => {
 
                 let accountInfo = await FTX.getBalance(API_CONNECTION);
                 let entry = await FTX.getPrice(API_CONNECTION, pair);
-                let risk = order.risk;
-                let tp = order.tp;
-                let sl = order.sl;
+                let risk = Number(order.risk);
+                let tp = Number(order.tp);
+                let sl = Number(order.sl);
                 let account_size = accountInfo.collateral;
                 let pos_size = 0;
                 if (side == 'buy')
@@ -226,7 +226,7 @@ app.post("/hook", async (req, res) => {
 
                 if (pos_size != 0) {
                     // test msg
-                    bot.sendMessage(order.chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${sl.toFixed(2)} and TP @ $${tp.toFixed(2)}`);
+                    bot.sendMessage(order.chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${Number(sl).toFixed(2)} and TP @ $${Number(tp).toFixed(2)}`);
                     bot.sendAnimation(order.chatId, './assets/goat.mp4');
 
                     // // entry
