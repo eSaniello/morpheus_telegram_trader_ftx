@@ -225,53 +225,49 @@ app.post("/hook", async (req, res) => {
                     pos_size = (account_size * (risk * 0.01)) / (sl - entry); //sell
 
                 if (pos_size != 0) {
-                    // test msg
-                    bot.sendMessage(order.chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${Number(sl).toFixed(2)} and TP @ $${Number(tp).toFixed(2)}`);
-                    bot.sendAnimation(order.chatId, './assets/goat.mp4');
-
-                    // // entry
-                    // API_CONNECTION.request({
-                    //     method: 'POST',
-                    //     path: '/orders',
-                    //     data: {
-                    //         market: pair,
-                    //         size: pos_size,
-                    //         side: side,
-                    //         type: 'market',
-                    //         price: null
-                    //     }
-                    // }).then(async () => {
-                    //     // stoploss
-                    //     API_CONNECTION.request({
-                    //         method: 'POST',
-                    //         path: '/conditional_orders',
-                    //         data: {
-                    //             market: pair,
-                    //             side: side == 'buy' ? 'sell' : 'buy',
-                    //             type: 'stop',
-                    //             size: pos_size,
-                    //             triggerPrice: sl,
-                    //             retryUntilFilled: true
-                    //         }
-                    //     }).then(async () => {
-                    //         // takeprofit
-                    //         API_CONNECTION.request({
-                    //             method: 'POST',
-                    //             path: '/conditional_orders',
-                    //             data: {
-                    //                 market: pair,
-                    //                 side: side == 'buy' ? 'sell' : 'buy',
-                    //                 type: 'takeProfit',
-                    //                 size: pos_size,
-                    //                 triggerPrice: tp,
-                    //                 retryUntilFilled: true
-                    //             }
-                    //         }).then(async () => {
-                    // bot.sendMessage(order.chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${sl} and TP @ $${tp}`);
-                    // bot.sendAnimation(order.chatId, './assets/goat.mp4');
-                    //         }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
-                    //     }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
-                    // }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
+                    // entry
+                    API_CONNECTION.request({
+                        method: 'POST',
+                        path: '/orders',
+                        data: {
+                            market: pair,
+                            size: pos_size,
+                            side: side,
+                            type: 'market',
+                            price: null
+                        }
+                    }).then(async () => {
+                        // stoploss
+                        API_CONNECTION.request({
+                            method: 'POST',
+                            path: '/conditional_orders',
+                            data: {
+                                market: pair,
+                                side: side == 'buy' ? 'sell' : 'buy',
+                                type: 'stop',
+                                size: pos_size,
+                                triggerPrice: sl,
+                                retryUntilFilled: true
+                            }
+                        }).then(async () => {
+                            // takeprofit
+                            API_CONNECTION.request({
+                                method: 'POST',
+                                path: '/conditional_orders',
+                                data: {
+                                    market: pair,
+                                    side: side == 'buy' ? 'sell' : 'buy',
+                                    type: 'takeProfit',
+                                    size: pos_size,
+                                    triggerPrice: tp,
+                                    retryUntilFilled: true
+                                }
+                            }).then(async () => {
+                                bot.sendMessage(order.chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${sl} and TP @ $${tp}`);
+                                bot.sendAnimation(order.chatId, './assets/goat.mp4');
+                            }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
+                        }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
+                    }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
                 } else {
                     bot.sendMessage(chatId, `❌ Error calculating position size ser`);
                 }
