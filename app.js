@@ -100,7 +100,7 @@ What can I 😎 do for you?
                 bot.sendMessage(chatId, `❌ Error calculating position size ser`);
             }
         } else {
-            bot.sendMessage(chatId, 'Niffo niffoooo, I need more info 😒');
+            bot.sendMessage(chatId, 'Niffo niffoooo, gib more info 😒');
         }
     }
 
@@ -183,7 +183,7 @@ Profit: ${HELPER.calculateProfit(order.recentAverageOpenPrice, price, order.side
 - Options = Once per bar close
 - Webhook URL = http://server_url/hook
 - Give it any alert name
-- Message should be = {"chatId":${chatId},"type":"BUY or SELL or CLOSE","exchange":"{{exchange}}","ticker":"{{ticker}}","timeframe":"{{interval}}","reason":"Catch the knife!"}`)
+- Message should be = {"chatId":${chatId},"type":"BUY or SELL or CLOSE","exchange":"{{exchange}}","ticker":"{{ticker}}","risk":"1","tp":"{{plot("TP")}}","sl":"{{plot("SL)}}","reason":"Catch the knife!"}`)
     }
 });
 
@@ -197,14 +197,91 @@ app.post("/hook", async (req, res) => {
     if (req.body.chatId) {
         const order = req.body;
         bot.sendMessage(order.chatId, `✅ Webhook received:
-${order.type} signal for ${order.ticker} on ${order.exchange}\nTimeframe: ${order.timeframe || "Not specified"}\nReason: ${order.reason || "Not specified"}`);
+${order.type} signal for ${order.ticker} on ${order.exchange}\nRisk %: ${order.risk || "Not specified"}\nTP: ${order.tp || "Not specified"}\nSL: ${order.sl || "Not specified"}\nReason: ${order.reason || "Not specified"}`);
+
+        // secret code in the alert to automatically take the trades
+        if (order.secret === 'meow') {
+            // make the connection with the user credentials
+            const API_CONNECTION = new FTXRest({
+                key: `${process.env.FTX_API_KEY}`,
+                secret: `${process.env.FTX_API_SECRET}`
+            });
+
+            if (order.type.toLowerCase() === 'buy' || order.type.toLowerCase() === 'sell') {
+                // create the order
+                let side = order.type.toLowerCase();
+                // extract the correct pair from the string. 
+                // THIS WILL ONLY WORK FOR PERPS!
+                let pair = `${order.ticker.toLowerCase().slice(0, order.ticker.length - 4)}-perp`;
+
+                let accountInfo = await FTX.getBalance(API_CONNECTION);
+                let entry = await FTX.getPrice(API_CONNECTION, pair);
+                let risk = order.risk;
+                let tp = order.tp;
+                let sl = order.sl;
+                let account_size = accountInfo.collateral;
+                let pos_size = 0;
+                if (side == 'buy')
+                    pos_size = (account_size * (risk * 0.01)) / (entry - sl); //buy
+                else if (side == 'sell')
+                    pos_size = (account_size * (risk * 0.01)) / (sl - entry); //sell
+
+                if (pos_size != 0) {
+                    // test msg
+                    bot.sendMessage(chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${sl} and TP @ $${tp}`);
+                    bot.sendAnimation(chatId, './assets/goat.mp4');
+
+                    // // entry
+                    // API_CONNECTION.request({
+                    //     method: 'POST',
+                    //     path: '/orders',
+                    //     data: {
+                    //         market: pair,
+                    //         size: pos_size,
+                    //         side: side,
+                    //         type: 'market',
+                    //         price: null
+                    //     }
+                    // }).then(async () => {
+                    //     // stoploss
+                    //     API_CONNECTION.request({
+                    //         method: 'POST',
+                    //         path: '/conditional_orders',
+                    //         data: {
+                    //             market: pair,
+                    //             side: side == 'buy' ? 'sell' : 'buy',
+                    //             type: 'stop',
+                    //             size: pos_size,
+                    //             triggerPrice: sl,
+                    //             retryUntilFilled: true
+                    //         }
+                    //     }).then(async () => {
+                    //         // takeprofit
+                    //         API_CONNECTION.request({
+                    //             method: 'POST',
+                    //             path: '/conditional_orders',
+                    //             data: {
+                    //                 market: pair,
+                    //                 side: side == 'buy' ? 'sell' : 'buy',
+                    //                 type: 'takeProfit',
+                    //                 size: pos_size,
+                    //                 triggerPrice: tp,
+                    //                 retryUntilFilled: true
+                    //             }
+                    //         }).then(async () => {
+                    //             bot.sendMessage(chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${sl} and TP @ $${tp}`);
+                    //             bot.sendAnimation(chatId, './assets/goat.mp4');
+                    //         }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
+                    //     }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
+                    // }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
+                } else {
+                    bot.sendMessage(chatId, `❌ Error calculating position size ser`);
+                }
+            }
+        }
     }
     res.status(200).end()
 })
 
-/**
- * Made possible by forwarding port 80 from node to the server
- * https://www.digitalocean.com/community/tutorials/how-to-use-pm2-to-setup-a-node-js-production-environment-on-an-ubuntu-vps
- */
 const PORT = 80;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`))
