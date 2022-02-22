@@ -39,8 +39,8 @@ What can I 😎 do for you?
 /info - Info about the bot
 /balance - Get account balance
 /open - Get open orders
-/buy - Create a buy / long order with a percentage size of account and stoploss [eg. /buy btc 2 52000]
-/sell - Create a sell / short order with a percentage size of account and stoploss [eg. /sell 2 btc 55000]
+/buy - Open a buy / long market order with a percentage size of account and stoploss [eg. /buy btc 2 52000]
+/sell - Open a sell / short market order with a percentage size of account and stoploss [eg. /sell 2 btc 55000]
 /close - Close all open orders [for specific pair /close eth]
 /alert - Forward TV alerts to this chat/chatroom`);
     }
@@ -183,7 +183,7 @@ Profit: ${HELPER.calculateProfit(order.recentAverageOpenPrice, price, order.side
 - Options = Once per bar close
 - Webhook URL = http://server_url/hook
 - Give it any alert name
-- Message should be = {"chatId":${chatId},"type":"BUY or SELL or CLOSE","exchange":"{{exchange}}","ticker":"{{ticker}}","risk":"1","tp":"{{plot("TP")}}","sl":"{{plot("SL")}}","reason":"Catch the knife!"}`)
+- Message should be = {"chatId":${chatId},"type":"BUY or SELL or CLOSE","exchange":"{{exchange}}","price":"{{close}}","ticker":"{{ticker}}","risk":"1","tp":"{{plot("TP")}}","sl":"{{plot("SL")}}","reason":"Catch the knife!"}`)
     }
 });
 
@@ -274,7 +274,7 @@ app.post("/hook", async (req, res) => {
             }
         } else {
             bot.sendMessage(order.chatId, `✅ Webhook received:
-    ${order.type} signal for ${order.ticker} on ${order.exchange}\nRisk %: ${order.risk || "Not specified"}\nTP: ${order.tp || "Not specified"}\nSL: ${order.sl || "Not specified"}\nReason: ${order.reason || "Not specified"}`);
+    ${order.type} signal for ${order.ticker} on ${order.exchange}\nPrice %: ${order.price || "Not specified"}\nRisk %: ${order.risk || "Not specified"}\nTP: ${order.tp || "Not specified"}\nSL: ${order.sl || "Not specified"}\nReason: ${order.reason || "Not specified"}`);
         }
     }
     res.status(200).end()
