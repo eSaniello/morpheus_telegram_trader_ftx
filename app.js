@@ -83,14 +83,15 @@ What can I 😎 do for you?
                 }).then(async () => {
                     API_CONNECTION.request({
                         method: 'POST',
-                        path: '/orders',
+                        path: '/conditional_orders',
                         data: {
                             market: pair,
                             side: side == 'buy' ? 'sell' : 'buy',
-                            type: 'limit',
+                            type: 'stop',
                             size: pos_size,
-                            price: sl,
-                            postOnly: true,
+                            triggerPrice: sl,
+                            orderPrice: sl,
+                            retryUntilFilled: true
                         }
                     }).then(async () => {
                         bot.sendMessage(chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${sl}`);
@@ -247,27 +248,29 @@ app.post("/hook", async (req, res) => {
                         // stoploss
                         API_CONNECTION.request({
                             method: 'POST',
-                            path: '/orders',
+                            path: '/conditional_orders',
                             data: {
                                 market: pair,
                                 side: side == 'buy' ? 'sell' : 'buy',
-                                type: 'limit',
+                                type: 'stop',
                                 size: pos_size,
-                                price: sl,
-                                postOnly: true
+                                triggerPrice: sl,
+                                orderPrice: sl,
+                                retryUntilFilled: true
                             }
                         }).then(async () => {
                             // takeprofit
                             API_CONNECTION.request({
                                 method: 'POST',
-                                path: '/orders',
+                                path: '/conditional_orders',
                                 data: {
                                     market: pair,
                                     side: side == 'buy' ? 'sell' : 'buy',
-                                    type: 'limit',
+                                    type: 'takeProfit',
                                     size: pos_size,
-                                    price: tp,
-                                    postOnly: true
+                                    triggerPrice: tp,
+                                    orderPrice: tp,
+                                    retryUntilFilled: true
                                 }
                             }).then(async () => {
                                 bot.sendMessage(order.chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${sl} and TP @ $${tp}`);
