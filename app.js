@@ -94,7 +94,13 @@ What can I 😎 do for you?
                         }
                     }).then(async () => {
                         bot.sendMessage(chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${sl}`);
-                        bot.sendAnimation(chatId, './assets/degen_mode.mp4');
+
+                        // pick random gif
+                        let num = Math.floor(Math.random() * 2);
+                        if (num == 0)
+                            bot.sendAnimation(chatId, './assets/degen_mode.mp4');
+                        else
+                            bot.sendAnimation(chatId, './assets/goat.mp4');
                     }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
                 }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
             } else {
@@ -265,7 +271,13 @@ app.post("/hook", async (req, res) => {
                                 }
                             }).then(async () => {
                                 bot.sendMessage(order.chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${sl} and TP @ $${tp}`);
-                                bot.sendAnimation(order.chatId, './assets/goat.mp4');
+
+                                // pick random gif
+                                let num = Math.floor(Math.random() * 2);
+                                if (num == 0)
+                                    bot.sendAnimation(chatId, './assets/degen_mode.mp4');
+                                else
+                                    bot.sendAnimation(chatId, './assets/goat.mp4');
                             }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
                         }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
                     }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
