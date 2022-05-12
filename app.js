@@ -39,9 +39,11 @@ What can I 😎 do for you?
 /info - Info about the bot
 /balance - Get account balance
 /open - Get open orders
-/buy - Open a buy / long market order with a percentage size of account and stoploss [eg. /buy btc 2 52000]
-/sell - Open a sell / short market order with a percentage size of account and stoploss [eg. /sell 2 btc 55000]
-/close - Close all open orders [for specific pair /close eth]
+/long - Open a buy / long market order with a percentage size of account and stoploss [eg. /long btc 2 52000]
+/short - Open a sell / short market order with a percentage size of account and stoploss [eg. /short 2 btc 55000]
+/long_chase - Chase the best bid with a limit buy order along with a percentage size of account and stoploss [eg. /long_chase 2 btc 55000]
+/short_chase - Chase the best ask with a limit sell order along with a percentage size of account and stoploss [eg. /short_chase 2 btc 55000]
+/close - Close all open orders using a market order [for specific pair /close eth]
 /alert - Forward TV alerts to this chat/chatroom`);
     }
 
@@ -81,15 +83,14 @@ What can I 😎 do for you?
                 }).then(async () => {
                     API_CONNECTION.request({
                         method: 'POST',
-                        path: '/conditional_orders',
+                        path: '/orders',
                         data: {
                             market: pair,
                             side: side == 'buy' ? 'sell' : 'buy',
-                            type: 'stop',
+                            type: 'limit',
                             size: pos_size,
-                            triggerPrice: sl,
-                            // orderPrice: sl,
-                            retryUntilFilled: true
+                            price: sl,
+                            postOnly: true,
                         }
                     }).then(async () => {
                         bot.sendMessage(chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${sl}`);
@@ -240,27 +241,27 @@ app.post("/hook", async (req, res) => {
                         // stoploss
                         API_CONNECTION.request({
                             method: 'POST',
-                            path: '/conditional_orders',
+                            path: '/orders',
                             data: {
                                 market: pair,
                                 side: side == 'buy' ? 'sell' : 'buy',
-                                type: 'stop',
+                                type: 'limit',
                                 size: pos_size,
-                                triggerPrice: sl,
-                                retryUntilFilled: true
+                                price: sl,
+                                postOnly: true
                             }
                         }).then(async () => {
                             // takeprofit
                             API_CONNECTION.request({
                                 method: 'POST',
-                                path: '/conditional_orders',
+                                path: '/orders',
                                 data: {
                                     market: pair,
                                     side: side == 'buy' ? 'sell' : 'buy',
-                                    type: 'takeProfit',
+                                    type: 'limit',
                                     size: pos_size,
-                                    triggerPrice: tp,
-                                    retryUntilFilled: true
+                                    price: tp,
+                                    postOnly: true
                                 }
                             }).then(async () => {
                                 bot.sendMessage(order.chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${sl} and TP @ $${tp}`);
