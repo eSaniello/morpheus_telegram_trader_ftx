@@ -5,6 +5,7 @@ const HELPER = require('./services/helper.service');
 const FTX = require('./services/ftx.service');
 const express = require("express")
 const dotenv = require('dotenv');
+const fs = require('fs');
 dotenv.config();
 
 const app = express()
@@ -97,11 +98,16 @@ What can I 😎 do for you?
                         bot.sendMessage(chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${sl}`);
 
                         // pick random gif
-                        let num = Math.floor(Math.random() * 2);
+                        let gifs = [];
+                        fs.readdir(testFolder, (err, files) => {
+                            files.forEach(file => {
+                                gifs.push(file);
+                            });
+                        });
+
+                        let num = Math.floor(Math.random() * gifs.length + 1);
                         if (num == 0)
                             bot.sendAnimation(chatId, './assets/degen_mode.mp4');
-                        else
-                            bot.sendAnimation(chatId, './assets/goat.mp4');
                     }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
                 }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
             } else {
@@ -197,6 +203,18 @@ Profit: ${HELPER.calculateProfit(order.recentAverageOpenPrice, price, order.side
 
 // default route
 app.get("/", (req, res) => {
+    // pick random gif
+    let gifs = [];
+    fs.readdir('./assets/', (err, files) => {
+        files.forEach(file => {
+            gifs.push(file);
+        });
+    });
+    console.log(gifs);
+    let num = Math.floor(Math.random() * gifs.length + 1);
+    if (num == 0)
+        bot.sendAnimation(chatId, './assets/degen_mode.mp4');
+
     res.status(200).send('Mie no ab monie niffo').end();
 })
 
