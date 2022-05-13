@@ -208,7 +208,7 @@ app.get("/", (req, res) => {
     fs.readdirSync('./assets/').forEach(file => {
         gifs.push(file);
     });
-    console.log(gifs);
+    console.log(gifs.length);
     let num = Math.floor(Math.random() * gifs.length + 1);
     if (num == 0)
         bot.sendAnimation(chatId, './assets/degen_mode.mp4');
