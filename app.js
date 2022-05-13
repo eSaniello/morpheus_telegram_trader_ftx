@@ -205,7 +205,7 @@ Profit: ${HELPER.calculateProfit(order.recentAverageOpenPrice, price, order.side
 app.get("/", (req, res) => {
     // pick random gif
     let gifs = [];
-    fs.readdirSync(testFolder).forEach(file => {
+    fs.readdirSync('./assets/').forEach(file => {
         gifs.push(file);
     });
     console.log(gifs);
