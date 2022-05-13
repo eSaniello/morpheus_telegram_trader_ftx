@@ -203,6 +203,7 @@ Profit: ${HELPER.calculateProfit(order.recentAverageOpenPrice, price, order.side
 
 // default route
 app.get("/", (req, res) => {
+    let chatId = '-529666290';
     // pick random gif
     let gifs = [];
     fs.readdirSync('./assets/').forEach(file => {
