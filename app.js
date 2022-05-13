@@ -99,15 +99,13 @@ What can I 😎 do for you?
 
                         // pick random gif
                         let gifs = [];
-                        fs.readdir(testFolder, (err, files) => {
-                            files.forEach(file => {
-                                gifs.push(file);
-                            });
+                        fs.readdirSync('./assets/').forEach(file => {
+                            gifs.push(file);
                         });
 
                         let num = Math.floor(Math.random() * gifs.length + 1);
-                        if (num == 0)
-                            bot.sendAnimation(chatId, './assets/degen_mode.mp4');
+
+                        bot.sendAnimation(chatId, './assets/' + gifs[num - 1]);
                     }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
                 }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
             } else {
@@ -203,17 +201,6 @@ Profit: ${HELPER.calculateProfit(order.recentAverageOpenPrice, price, order.side
 
 // default route
 app.get("/", (req, res) => {
-    let chatId = '-529666290';
-    // pick random gif
-    let gifs = [];
-    fs.readdirSync('./assets/').forEach(file => {
-        gifs.push(file);
-    });
-
-    let num = Math.floor(Math.random() * gifs.length + 1);
-
-    bot.sendAnimation(chatId, './assets/' + gifs[num]);
-
     res.status(200).send('Mie no ab monie niffo').end();
 })
 
@@ -293,11 +280,14 @@ app.post("/hook", async (req, res) => {
                                 bot.sendMessage(order.chatId, `✅ ${side.toUpperCase()} $${(pos_size).toFixed(5)} ${pair} @ $${entry} with SL @ $${sl} and TP @ $${tp}`);
 
                                 // pick random gif
-                                let num = Math.floor(Math.random() * 2);
-                                if (num == 0)
-                                    bot.sendAnimation(chatId, './assets/degen_mode.mp4');
-                                else
-                                    bot.sendAnimation(chatId, './assets/goat.mp4');
+                                let gifs = [];
+                                fs.readdirSync('./assets/').forEach(file => {
+                                    gifs.push(file);
+                                });
+
+                                let num = Math.floor(Math.random() * gifs.length + 1);
+
+                                bot.sendAnimation(chatId, './assets/' + gifs[num - 1]);
                             }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
                         }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
                     }).catch(res => bot.sendMessage(chatId, `❌ ${res}`));
